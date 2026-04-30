@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帛書老子研修社 - Laoziworkshop Institute</title>
+    <style>
+        body { 
+            font-family: "PingFang TC", "STKaiti", serif; 
+            background-color: #f4f1ea; 
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px 20px;
+        }
+        h1 { 
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            letter-spacing: 6px;
+            color: #2c2c2c;
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: #8a7d6a;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+        .intro-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 40px;
+            text-align: left;
+            background: rgba(255,255,255,0.5);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #8a7d6a;
+        }
+        .btn { 
+            display: inline-block; 
+            padding: 18px 45px; 
+            background: #5d5b57; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-size: 1.25rem;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+            transition: all 0.3s ease;
+        }
+        .btn:hover { 
+            background: #333; 
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 0.85rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>帛書老子研修社</h1>
+    <div class="subtitle">Laoziworkshop Institute</div>
+
+    <div class="intro-text">
+        面對混亂的世界，你是否感到迷惘？<br><br>
+        2500年前的《老子》帛書版，藏著最原始的生存密碼。這不是普通的心理測驗，而是一場與大道的對話。透過「道、德、物、器、勢」五個維度，只需三秒，為你當下的困境導航，看清進退之機。
+    </div>
+
+    <a href="quiz.html" class="btn">✨ 立即開啟「五維決策」導航</a>
+
+    <div class="footer">
+        © 帛書老子研修社 | 探尋最原始的道德經智慧
+    </div>
+</div>
+
+</body>
+</html>
