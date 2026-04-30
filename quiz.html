@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>五維決策導航</title>
+    <title>五維決策導航 - 帛書老子研修室</title>
     <style>
         body { font-family: sans-serif; background: #f4f1ea; display: flex; justify-content: center; padding: 20px; }
         #quiz-app { background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h2 { color: #5d5b57; text-align: center; margin-bottom: 5px; }
         .hint { text-align: center; color: #888; margin-bottom: 25px; font-size: 0.9rem; }
-        .q-block { margin-bottom: 25px; border-bottom: 1px solid #eee; pb: 15px; }
+        .q-block { margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .q-title { font-weight: bold; margin-bottom: 10px; display: block; }
         .options { display: flex; gap: 5px; justify-content: space-between; }
-        .opt-btn { flex: 1; padding: 8px 2px; font-size: 12px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 5px; }
+        .opt-btn { flex: 1; padding: 8px 2px; font-size: 11px; border: 1px solid #ccc; background: #fff; cursor: pointer; border-radius: 5px; }
         .opt-btn.active { background: #5d5b57; color: white; border-color: #5d5b57; }
         #submit-btn { width: 100%; padding: 15px; background: #8a7d6a; color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; margin-top: 10px; }
         #result-box { margin-top: 30px; padding: 20px; border-radius: 10px; background: #f9f9f9; text-align: center; display: none; border: 2px solid #5d5b57; }
@@ -22,14 +22,14 @@
 <body>
 
 <div id="quiz-app">
-    <h2>老子智慧導航</h2>
+    <h2>帛書老子研修室</h2>
     <p class="hint">「請針對你要做決策的一件事情」</p>
 
     <div id="questions-list"></div>
 
     <button id="submit-btn" onclick="calculate()">【 查看結果 】</button>
 
-    <div id="result-box" id="result-box">
+    <div id="result-box">
         <span style="font-size: 1.1rem;">目前狀態</span>
         <span class="status-big" id="status-display"></span>
         <p id="desc-display" style="font-size: 1.2rem; font-weight: bold;"></p>
@@ -52,7 +52,6 @@
 
     let userScores = { dao: null, de: null, wu: null, qi: null, shi: null };
 
-    // 初始化題目
     const list = document.getElementById('questions-list');
     questions.forEach(q => {
         const div = document.createElement('div');
@@ -65,7 +64,7 @@
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
             btn.innerText = opt.t;
-            btn.onclick = (e) => {
+            btn.onclick = () => {
                 userScores[q.id] = opt.v;
                 Array.from(row.children).forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -75,7 +74,6 @@
     });
 
     function calculate() {
-        // 檢查是否漏答
         if (Object.values(userScores).includes(null)) {
             alert("請完成所有點選再查看結果");
             return;
@@ -86,17 +84,13 @@
         let status = "";
         let desc = "";
 
-        // ⚙️ 判定邏輯
-        // 1. 特殊規則優先
         if (dao <= -1) {
             status = "止";
             desc = "要停止";
         } else if (shi <= -1) {
             status = "轉 或 止";
             desc = "要調整 或 要停止";
-        } 
-        // 2. 一般情況
-        else {
+        } else {
             if (total >= 6) { status = "動"; desc = "可以行動"; }
             else if (total >= 2) { status = "蓄"; desc = "先累積"; }
             else if (total >= -1) { status = "等"; desc = "先觀察"; }
@@ -104,7 +98,6 @@
             else { status = "止"; desc = "要停止"; }
         }
 
-        // 📊 顯示畫面
         document.getElementById('status-display').innerText = status;
         document.getElementById('desc-display').innerText = desc;
         document.getElementById('result-box').style.display = 'block';
