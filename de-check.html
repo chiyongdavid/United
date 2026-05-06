@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>德的運作診斷 - 深度版</title>
+    <title>德的運作診斷 - 帛書老子研修社</title>
     <style>
         :root {
             --bg: #f4f1ea; --ink: #2c2c2c; --accent: #8a7d6a; --gold: #b39964;
@@ -15,30 +15,26 @@
         h1 { text-align: center; font-size: 1.5rem; letter-spacing: 4px; margin: 0 0 5px 0; }
         .subtitle { text-align: center; color: var(--accent); font-size: 0.8rem; margin-bottom: 20px; display: block; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 
-        .q-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f9f9f9; }
-        .q-title { font-weight: bold; font-size: 0.95rem; margin-bottom: 5px; display: block; color: #333; }
-        .q-desc { font-size: 0.75rem; color: #999; margin-bottom: 10px; }
+        .q-block { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #f9f9f9; }
+        .q-title { font-weight: bold; font-size: 1rem; margin-bottom: 5px; display: block; color: #333; }
+        .q-desc { font-size: 0.8rem; color: #999; margin-bottom: 12px; }
 
         .options { display: flex; gap: 4px; }
-        .opt-btn { flex: 1; padding: 10px 1px; font-size: 9px; border: 1px solid #eee; background: #fafafa; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-        .opt-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+        .opt-btn { 
+            flex: 1; padding: 10px 1px; font-size: 10px; border: 1px solid #eee; 
+            background: #fafafa; cursor: pointer; border-radius: 4px; transition: 0.2s; 
+            color: #666;
+        }
+        /* 修正點：確保 active 只作用於被選中的按鈕 */
+        .opt-btn.active { background: var(--ink) !important; color: white !important; border-color: var(--ink) !important; }
 
-        #submit-btn { width: 100%; padding: 16px; background: var(--ink); color: white; border: none; font-size: 1.1rem; cursor: pointer; margin-top: 10px; letter-spacing: 2px; }
+        #submit-btn { width: 100%; padding: 16px; background: var(--ink); color: white; border: none; font-size: 1.1rem; cursor: pointer; margin-top: 10px; letter-spacing: 2px; font-weight: bold; }
 
-        /* 結果區 - 極致緊湊美化 */
-        #result-box { display: none; margin-top: 20px; text-align: center; animation: slideIn 0.5s; }
+        /* 結果區 */
+        #result-box { display: none; margin-top: 20px; text-align: center; }
         .status-banner { padding: 15px; color: white; font-weight: bold; font-size: 1.4rem; border-radius: 4px; margin-bottom: 15px; }
-        
         .diag-card { text-align: left; background: #fdfcf8; border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-left: 5px solid var(--gold); }
-        .diag-card h4 { margin: 0 0 8px 0; color: var(--gold); font-size: 1rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 5px; }
-        .diag-text { font-size: 0.88rem; line-height: 1.6; color: #444; }
-
-        .decision-alert { border-left: 5px solid var(--ink); padding: 15px; background: #f9f9f9; text-align: left; margin-bottom: 15px; }
-        .decision-title { font-weight: bold; font-size: 1.1rem; color: var(--ink); display: block; margin-bottom: 5px; }
-
-        .action-item { background: #fff5f5; border: 1px solid #ffe3e3; padding: 10px; border-radius: 4px; font-size: 0.8rem; margin-top: 5px; color: var(--stop); display: none; }
-
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .diag-text { font-size: 0.9rem; line-height: 1.6; color: #444; }
     </style>
 </head>
 <body>
@@ -48,142 +44,130 @@
     <span class="subtitle">帛書老子研修社｜生命系統承載檢測</span>
 
     <div id="questions-list">
-        <!-- 1. 蓄養 -->
-        <div class="q-block">
+        <!-- 每一題都加上獨取的 ID 確保 JS 能精準抓取 -->
+        <div class="q-block" id="q0">
             <span class="q-title">1. 蓄養：能量是否持續累積？</span>
             <div class="q-desc">檢查：累積是否正在中斷、流失或停滯？</div>
             <div class="options">
-                <button class="opt-btn" onclick="setScore(0, 2)">持續累積</button>
-                <button class="opt-btn" onclick="setScore(0, 1)">大致穩定</button>
-                <button class="opt-btn" onclick="setScore(0, 0)">不確定</button>
-                <button class="opt-btn" onclick="setScore(0, -1)">出現缺口</button>
-                <button class="opt-btn" onclick="setScore(0, -2)">嚴重流失</button>
+                <button class="opt-btn" onclick="selectOption(0, 2, this)">持續累積</button>
+                <button class="opt-btn" onclick="selectOption(0, 1, this)">大致穩定</button>
+                <button class="opt-btn" onclick="selectOption(0, 0, this)">不確定</button>
+                <button class="opt-btn" onclick="selectOption(0, -1, this)">出現缺口</button>
+                <button class="opt-btn" onclick="selectOption(0, -2, this)">嚴重流失</button>
             </div>
         </div>
-        <!-- 2. 不干擾 -->
-        <div class="q-block">
+
+        <div class="q-block" id="q1">
             <span class="q-title">2. 不干擾：是否過度干預？</span>
             <div class="q-desc">檢查：是否在強行控制本該自然運作的事？</div>
             <div class="options">
-                <button class="opt-btn" onclick="setScore(1, 2)">放手信任</button>
-                <button class="opt-btn" onclick="setScore(1, 1)">少許插手</button>
-                <button class="opt-btn" onclick="setScore(1, 0)">不明確</button>
-                <button class="opt-btn" onclick="setScore(1, -1)">忍不住管</button>
-                <button class="opt-btn" onclick="setScore(1, -2)">強行控制</button>
+                <button class="opt-btn" onclick="selectOption(1, 2, this)">放手信任</button>
+                <button class="opt-btn" onclick="selectOption(1, 1, this)">少許插手</button>
+                <button class="opt-btn" onclick="selectOption(1, 0, this)">不明確</button>
+                <button class="opt-btn" onclick="selectOption(1, -1, this)">忍不住管</button>
+                <button class="opt-btn" onclick="selectOption(1, -2, this)">強行控制</button>
             </div>
         </div>
-        <!-- 3. 低耗 -->
-        <div class="q-block">
+
+        <div class="q-block" id="q2">
             <span class="q-title">3. 低耗：是否陷入對抗？</span>
             <div class="q-desc">檢查：是否為了證明正確而造成內耗？</div>
             <div class="options">
-                <button class="opt-btn" onclick="setScore(2, 2)">不對抗</button>
-                <button class="opt-btn" onclick="setScore(2, 1)">微小摩擦</button>
-                <button class="opt-btn" onclick="setScore(2, 0)">臨界</button>
-                <button class="opt-btn" onclick="setScore(2, -1)">陷入對立</button>
-                <button class="opt-btn" onclick="setScore(2, -2)">劇烈消耗</button>
+                <button class="opt-btn" onclick="selectOption(2, 2, this)">不對抗</button>
+                <button class="opt-btn" onclick="selectOption(2, 1, this)">微小摩擦</button>
+                <button class="opt-btn" onclick="selectOption(2, 0, this)">臨界</button>
+                <button class="opt-btn" onclick="selectOption(2, -1, this)">陷入對立</button>
+                <button class="opt-btn" onclick="selectOption(2, -2, this)">劇烈消耗</button>
             </div>
         </div>
-        <!-- 4. 柔性 -->
-        <div class="q-block">
+
+        <div class="q-block" id="q3">
             <span class="q-title">4. 柔性：應對是否柔韌？</span>
             <div class="q-desc">檢查：應對方式是剛硬僵執，還是順應轉化？</div>
             <div class="options">
-                <button class="opt-btn" onclick="setScore(3, 2)">柔韌順應</button>
-                <button class="opt-btn" onclick="setScore(3, 1)">尚有彈性</button>
-                <button class="opt-btn" onclick="setScore(3, 0)">普通</button>
-                <button class="opt-btn" onclick="setScore(3, -1)">僵硬固執</button>
-                <button class="opt-btn" onclick="setScore(3, -2)">非黑即白</button>
+                <button class="opt-btn" onclick="selectOption(3, 2, this)">柔韌順應</button>
+                <button class="opt-btn" onclick="selectOption(3, 1, this)">尚有彈性</button>
+                <button class="opt-btn" onclick="selectOption(3, 0, this)">普通</button>
+                <button class="opt-btn" onclick="selectOption(3, -1, this)">僵硬固執</button>
+                <button class="opt-btn" onclick="selectOption(3, -2, this)">非黑即白</button>
             </div>
         </div>
-        <!-- 5. 知止 -->
-        <div class="q-block">
+
+        <div class="q-block" id="q4">
             <span class="q-title">5. 知止：是否知道停在哪？</span>
             <div class="q-desc">檢查：系統是否正在失控擴張、追加投入？</div>
             <div class="options">
-                <button class="opt-btn" onclick="setScore(4, 2)">知止不殆</button>
-                <button class="opt-btn" onclick="setScore(4, 1)">節制有度</button>
-                <button class="opt-btn" onclick="setScore(4, 0)">不明確</button>
-                <button class="opt-btn" onclick="setScore(4, -1)">過度追加</button>
-                <button class="opt-btn" onclick="setScore(4, -2)">失控過度</button>
+                <button class="opt-btn" onclick="selectOption(4, 2, this)">知止不殆</button>
+                <button class="opt-btn" onclick="selectOption(4, 1, this)">節制有度</button>
+                <button class="opt-btn" onclick="selectOption(4, 0, this)">不明確</button>
+                <button class="opt-btn" onclick="selectOption(4, -1, this)">過度追加</button>
+                <button class="opt-btn" onclick="selectOption(4, -2, this)">失控過度</button>
             </div>
         </div>
     </div>
 
-    <button id="submit-btn" onclick="calculate()">【 查看診斷結果 】</button>
+    <button id="submit-btn" onclick="showResult()">【 查看診斷結果 】</button>
 
     <div id="result-box">
         <div id="banner" class="status-banner"></div>
-        
-        <div class="decision-alert">
-            <span class="decision-title" id="decision-title"></span>
-            <span id="decision-desc" style="font-size: 0.9rem; color: #666;"></span>
-        </div>
-
         <div class="diag-card">
-            <h4>💡 系統診斷報告</h4>
+            <h4 id="decision-title" style="margin-top:0; color:var(--ink);"></h4>
             <div id="diag-text" class="diag-text"></div>
         </div>
-
-        <div id="warning-box" class="action-item">
-            <strong>⚠️ 警示：</strong> 檢測到嚴重的「失德點」，必須立即停止干預。
-        </div>
-
-        <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:var(--accent); cursor:pointer; text-decoration: underline; font-size: 0.8rem;">← 重新診斷</button>
+        <button onclick="location.reload()" style="margin-top:15px; background:none; border:none; color:var(--accent); cursor:pointer; text-decoration: underline; font-size: 0.8rem;">← 重新診斷</button>
     </div>
 </div>
 
 <script>
-    let scores = [null, null, null, null, null];
+    // 儲存每題分數
+    let userScores = [null, null, null, null, null];
 
-    function setScore(idx, val) {
-        scores[idx] = val;
-        const rows = document.querySelectorAll('.options');
-        const btns = rows[idx].querySelectorAll('.opt-btn');
+    function selectOption(qIdx, score, btnElement) {
+        // 更新分數
+        userScores[qIdx] = score;
+
+        // 移除該題所有按鈕的 active 狀態
+        const row = document.getElementById(`q${qIdx}`);
+        const btns = row.querySelectorAll('.opt-btn');
         btns.forEach(b => b.classList.remove('active'));
-        // 找到對應值的按鈕標記為 active
-        Array.from(btns).forEach(b => {
-            if (b.getAttribute('onclick').includes(val)) b.classList.add('active');
-        });
+
+        // 幫被點擊的按鈕加上 active
+        btnElement.classList.add('active');
     }
 
-    function calculate() {
-        if (scores.includes(null)) return alert("請完成所有診斷項目。");
-        
-        const total = scores.reduce((a, b) => a + b, 0);
+    function showResult() {
+        if (userScores.includes(null)) {
+            alert("請完成所有診斷項目。");
+            return;
+        }
+
+        const total = userScores.reduce((a, b) => a + b, 0);
         document.getElementById('result-box').style.display = 'block';
-        document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('questions-list').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
 
         const banner = document.getElementById('banner');
         const dTitle = document.getElementById('decision-title');
-        const dDesc = document.getElementById('decision-desc');
         const diag = document.getElementById('diag-text');
-        const warn = document.getElementById('warning-box');
 
-        // 完全中文診斷，移除加一減一數字
         if (total >= 6) {
             banner.innerText = "德充足 (系統穩健)";
             banner.style.backgroundColor = "var(--safe)";
             dTitle.innerText = "判斷：可以行動";
-            dDesc.innerText = "內在能量充沛，結構具備強大的承載力。此時行動順勢而為，無阻礙。";
             diag.innerText = "目前系統運作順暢，蓄養大於消耗。請繼續保持『不干預』的智慧。";
         } else if (total >= 0) {
             banner.innerText = "德偏弱 (結構鬆動)";
             banner.style.backgroundColor = "var(--gold)";
             dTitle.innerText = "判斷：保持觀望";
-            dDesc.innerText = "正負交雜。此時穩定是脆弱的，雖可勉強維持，但隨時可能轉為耗散。";
             diag.innerText = "建議進入『蓄』的環節。停止擴張，重新累積資源與信任。";
         } else {
             banner.innerText = "德不足 (耗散開始)";
             banner.style.backgroundColor = "var(--stop)";
             dTitle.innerText = "判斷：不要動";
-            dDesc.innerText = "局雖好但德差。此時行動會因為內在耗散而導致失敗。";
             diag.innerText = "能量正處於劇烈損耗中。對抗與控制過度。必須啟動『止』，防止結構性崩潰。";
         }
-
-        if (scores.includes(-2)) warn.style.display = "block";
-        window.scrollTo(0,0);
+        
+        window.scrollTo(0, 0);
     }
 </script>
 
