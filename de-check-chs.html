@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>德的运作诊断 - 帛书老子研修社</title>
+    <style>
+        :root {
+            --bg: #f4f1ea; --ink: #1a1a1a; --accent: #8a7d6a; --gold: #b39964;
+            --stop: #d0021b; --wait: #4a90e2; --store: #50e3c2; --move: #00c853;
+            --paper: #ffffff;
+        }
+        body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--ink); margin: 0; padding: 15px; display: flex; justify-content: center; }
+        #quiz-app { background: var(--paper); max-width: 520px; width: 100%; padding: 30px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #dcd7cf; }
+        
+        h1 { text-align: center; font-size: 1.5rem; letter-spacing: 4px; margin: 0; font-weight: 800; }
+        .subtitle { text-align: center; color: var(--accent); font-size: 0.85rem; margin-bottom: 20px; display: block; border-bottom: 1px solid #eee; padding-bottom: 15px; font-weight: 600; }
+
+        .q-block { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #f7f7f7; }
+        .q-title { font-weight: 700; margin-bottom: 4px; display: block; color: #333; font-size: 1.05rem; }
+        .q-desc { font-size: 0.8rem; color: #999; margin-bottom: 10px; }
+
+        .options { display: flex; gap: 4px; }
+        .opt-btn { flex: 1; padding: 12px 1px; font-size: 10px; border: 1px solid #eee; background: #fafafa; cursor: pointer; border-radius: 4px; font-weight: 600; color: #666; transition: 0.2s; }
+        .opt-btn.active { background: var(--ink) !important; color: white !important; border-color: var(--ink) !important; }
+
+        #submit-btn { width: 100%; padding: 18px; background: var(--ink); color: white; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; letter-spacing: 4px; }
+
+        #result-box { display: none; margin-top: 30px; text-align: center; animation: zoomIn 0.4s ease-out; }
+        .indicator-circle { width: 160px; height: 160px; border: 7px solid currentColor; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff; }
+        .status-text { font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; background: #fff; padding: 0 10px; position: absolute; z-index: 10; }
+        
+        .diag-card { text-align: left; background: #fdfcf8; border: 1px solid #eee; padding: 18px; margin-top: 20px; border-left: 5px solid var(--gold); }
+        .diag-card h4 { margin: 0 0 8px 0; color: var(--gold); font-size: 1rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 5px; }
+        .diag-text { font-size: 0.95rem; line-height: 1.7; color: #444; }
+
+        .motto-box { background: #f9f9f9; padding: 12px; border-radius: 4px; margin-top: 15px; font-size: 0.85rem; border: 1px solid #eee; text-align: left; }
+        .motto-box strong { color: var(--ink); }
+
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div id="quiz-app">
+    <h1>德的运作诊断</h1>
+    <span class="subtitle">帛书老子研修社｜系统耗散检测</span>
+
+    <div id="questions-list">
+        <!-- 维度 1 -->
+        <div class="q-block" id="q-0">
+            <span class="q-title">1. 蓄养：能量是否在持续积累？</span>
+            <div class="q-desc">检查：资源、信任与成长是否稳定？有无中断或停滞？</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectScore(0, 2, this)">明确成立</button>
+                <button class="opt-btn" onclick="selectScore(0, 1, this)">大致成立</button>
+                <button class="opt-btn" onclick="selectScore(0, 0, this)">不确定</button>
+                <button class="opt-btn" onclick="selectScore(0, -1, this)">有问题</button>
+                <button class="opt-btn" onclick="selectScore(0, -2, this)">不成立</button>
+            </div>
+        </div>
+        <!-- 维度 2 -->
+        <div class="q-block" id="q-1">
+            <span class="q-title">2. 不干扰：是否在过度干预？</span>
+            <div class="q-desc">检查：是否忍不住要插手？是否试图通过控制代替信任？</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectScore(1, 2, this)">明确成立</button>
+                <button class="opt-btn" onclick="selectScore(1, 1, this)">大致成立</button>
+                <button class="opt-btn" onclick="selectScore(1, 0, this)">不确定</button>
+                <button class="opt-btn" onclick="selectScore(1, -1, this)">有问题</button>
+                <button class="opt-btn" onclick="selectScore(1, -2, this)">不成立</button>
+            </div>
+        </div>
+        <!-- 维度 3 -->
+        <div class="q-block" id="q-2">
+            <span class="q-title">3. 低耗：是否陷入了无效对抗？</span>
+            <div class="q-desc">检查：是否陷入权力斗爭？是否在为了证明正确而虚耗？</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectScore(2, 2, this)">明確成立</button>
+                <button class="opt-btn" onclick="selectScore(2, 1, this)">大致成立</button>
+                <button class="opt-btn" onclick="selectScore(2, 0, this)">不確定</button>
+                <button class="opt-btn" onclick="selectScore(2, -1, this)">有問題</button>
+                <button class="opt-btn" onclick="selectScore(2, -2, this)">不成立</button>
+            </div>
+        </div>
+        <!-- 维度 4 -->
+        <div class="q-block" id="q-3">
+            <span class="q-title">4. 柔性：应对方式是否柔韧？</span>
+            <div class="q-desc">检查：是僵硬执著、非黑即白，还是顺势转化？</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectScore(3, 2, this)">明确成立</button>
+                <button class="opt-btn" onclick="selectScore(3, 1, this)">大致成立</button>
+                <button class="opt-btn" onclick="selectScore(3, 0, this)">不确定</button>
+                <button class="opt-btn" onclick="selectScore(3, -1, this)">有问题</button>
+                <button class="opt-btn" onclick="selectScore(3, -2, this)">不成立</button>
+            </div>
+        </div>
+        <!-- 维度 5 -->
+        <div class="q-block" id="q-4">
+            <span class="q-title">5. 知止：是否知道停在哪里？</span>
+            <div class="q-desc">检查：系统是否存在失控扩张？有没有停不下来的焦虑？</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectScore(4, 2, this)">明确成立</button>
+                <button class="opt-btn" onclick="selectScore(4, 1, this)">大致成立</button>
+                <button class="opt-btn" onclick="selectScore(4, 0, this)">不确定</button>
+                <button class="opt-btn" onclick="selectScore(4, -1, this)">有问题</button>
+                <button class="opt-btn" onclick="selectScore(4, -2, this)">不成立</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="submit-btn" onclick="calculateResult()">生成深度诊断报告</button>
+
+    <div id="result-box">
+        <div class="indicator-circle" id="circle-box">
+            <span class="status-text" id="status-display"></span>
+        </div>
+        
+        <div class="diag-card">
+            <h4>💡 系统态势诊断</h4>
+            <div id="analysis-text" class="diag-text"></div>
+        </div>
+
+        <div class="diag-card">
+            <h4>⚙️ 行动指令建議</h4>
+            <div id="guide-text" class="diag-text"></div>
+        </div>
+
+        <div class="motto-box">
+            <strong>核心心法：</strong>德，不是让事情变得更好，而是让事情不会坏掉。如果没有德，再好的决策都会在对立中耗散。
+        </div>
+
+        <p style="font-size: 0.8rem; color: #aaa; margin-top: 25px; text-align: center;">慎终若始，则无败事。</p>
+        <button onclick="location.reload()" style="margin-top:10px; background:none; border:none; color:var(--accent); cursor:pointer; text-decoration: underline; font-size: 0.8rem;">← 重新诊断</button>
+    </div>
+</div>
+
+<script>
+    let currentScores = [null, null, null, null, null];
+
+    function selectScore(idx, val, btn) {
+        currentScores[idx] = val;
+        const parent = document.getElementById(`q-${idx}`);
+        const btns = parent.querySelectorAll('.opt-btn');
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function calculateResult() {
+        if (currentScores.includes(null)) {
+            alert("请完成所有维度的叩问再查看结果。");
+            return;
+        }
+
+        const total = currentScores.reduce((a, b) => a + b, 0);
+        document.getElementById('result-box').style.display = 'block';
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('questions-list').style.display = 'none';
+
+        const icon = document.getElementById('status-display');
+        const box = document.getElementById('circle-box');
+        const analysis = document.getElementById('analysis-text');
+        const guide = document.getElementById('guide-text');
+
+        // 深度诊断逻辑融会贯通
+        if (total >= 6) {
+            icon.innerText = "德充"; box.style.color = "var(--move)";
+            analysis.innerHTML = "<b>态势：系统正向蓄养。</b><br>蓄养大于耗散，结构稳健。你目前与自然规律契合，能量正在持续积累而非流失。";
+            guide.innerHTML = "<b>建议：保持【不干预】。</b><br>在顺境中不要妄動，守住這種「無壓力」的擴張狀態。";
+        } else if (total >= 0) {
+            icon.innerText = "德平"; box.style.color = "var(--gold)";
+            analysis.innerHTML = "<b>态势：结构开始松动。</b><br>正负交杂，处于临界点。内部已经开始出现摩擦力，这种平衡是脆弱的，随时可能转为耗散。";
+            guide.innerHTML = "<b>建议：立即进入【蓄】。</b><br>停止消耗，回歸基礎。看哪個指標最低，就先補哪一個。";
+        } else {
+            icon.innerText = "德散"; box.style.color = "var(--stop)";
+            analysis.innerHTML = "<b>态势：逆德运作中。</b><br>耗散大于蓄养，能量正在剧烈外流。目前的控制、对抗或僵硬，正讓系統加速走向崩解。";
+            guide.innerHTML = "<b>建议：唯一指令【止】！</b><br>立即停止干预，停止追加，停止对抗。止损是防止彻底崩溃的唯一手段。";
+        }
+        window.scrollTo(0,0);
+    }
+</script>
+
+</body>
+</html>
