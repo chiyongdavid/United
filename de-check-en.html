@@ -3,47 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De Operational Diagnostics | Systemic Check</title>
+    <title>De Operational Audit - Final Stable</title>
     <style>
         :root {
             --bg: #f4f1ea; --ink: #2c2c2c; --accent: #8a7d6a; --gold: #b39964;
-            --stop: #c0392b; --safe: #27ae60; --paper: #ffffff;
+            --stop: #c0392b; --wait: #5d9cec; --safe: #27ae60; --paper: #ffffff;
         }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--ink); margin: 0; padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
-        
         #quiz-app { background: var(--paper); max-width: 550px; width: 100%; padding: 30px; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #dcd7cf; }
         
         h1 { text-align: center; font-size: 1.4rem; letter-spacing: 1px; margin: 0 0 5px 0; font-weight: 800; }
         .subtitle { text-align: center; color: var(--accent); font-size: 0.8rem; margin-bottom: 20px; display: block; border-bottom: 1px solid #eee; padding-bottom: 15px; text-transform: uppercase; font-weight: 600; }
-        .hint { text-align: center; color: #777; margin-bottom: 25px; font-size: 0.9rem; font-style: italic; }
-
+        
         .q-block { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #f9f9f9; }
         .q-title { font-weight: 700; margin-bottom: 6px; display: block; color: #333; font-size: 1rem; }
         .q-desc { font-size: 0.8rem; color: #999; margin-bottom: 12px; }
 
         .options { display: flex; gap: 4px; justify-content: space-between; }
         .opt-btn { 
-            flex: 1; padding: 10px 1px; font-size: 9px; border: 1px solid #eee; 
+            flex: 1; padding: 12px 1px; font-size: 9px; border: 1px solid #eee; 
             background: #fafafa; cursor: pointer; border-radius: 4px; transition: 0.2s; 
             color: #666; outline: none; text-transform: uppercase; font-weight: 600;
         }
+        /* 核心修正：確保只有 active 類別會變色 */
         .opt-btn.active { background: var(--ink) !important; color: white !important; border-color: var(--ink) !important; }
 
-        #submit-btn { width: 100%; padding: 18px; background: var(--ink); color: white; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; letter-spacing: 1px; }
+        #submit-btn { width: 100%; padding: 18px; background: var(--ink); color: white; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 15px; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* Results Display */
+        /* 結果顯示 */
         #result-box { display: none; margin-top: 25px; text-align: center; animation: fadeIn 0.6s ease-out; }
         .nav-seal { width: 110px; height: 110px; border: 8px solid var(--ink); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; }
-        
         .diag-card { text-align: left; background: #fdfcf8; border: 1px solid #eee; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--gold); }
         .diag-card h4 { margin: 0 0 10px 0; color: var(--gold); font-size: 0.95rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .diag-text { font-size: 0.9rem; line-height: 1.6; color: #444; }
 
-        .situation-panel { background: #f9f9f9; padding: 15px; margin-top: 10px; border-radius: 4px; border: 1px solid #eee; }
         .motto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .motto-item { font-size: 0.75rem; color: #666; background: #f9f9f9; padding: 10px; border-radius: 4px; border: 1px solid #eee; text-align: left; }
         .motto-item strong { color: var(--ink); display: block; margin-bottom: 3px; font-size: 0.8rem; }
-
         .final-quote { font-style: italic; color: var(--accent); margin-top: 35px; border-top: 1px double #ddd; padding-top: 20px; font-size: 0.85rem; text-align: center; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -51,79 +47,76 @@
 <body>
 
 <div id="quiz-app">
-    <h1>OPERATIONAL DIAGNOSTICS OF DE</h1>
+    <h1>DE OPERATIONAL DIAGNOSTICS</h1>
     <span class="subtitle">Systemic Check on Dissipation & Integrity</span>
     
-    <!-- Added Situation Selection for Dual-Table Integration -->
     <div style="background: #fdfcf8; padding: 15px; border: 1px dashed var(--accent); margin-bottom: 25px;">
-        <label style="font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 5px;">Step 1: Current Situation Assessment</label>
+        <label style="font-weight: 700; font-size: 0.9rem; display: block; margin-bottom: 5px;">Step 1: Situation Assessment</label>
         <select id="situation-input" style="width: 100%; padding: 10px; font-family: inherit;">
             <option value="good">Good Situation (Positive Momentum)</option>
             <option value="bad">Bad Situation (Structural Risks)</option>
         </select>
     </div>
 
-    <p class="hint">Step 2: Score intuitively within 5 seconds.</p>
-
     <div id="questions-list">
-        <!-- Questions aligned with provided English content -->
-        <div class="q-block" id="group-0">
+        <!-- 每一題都呼叫 selectOption(題號, 分數, 自己) -->
+        <div class="q-block" id="q0">
             <span class="q-title">1. Accumulation</span>
             <div class="q-desc">Am I continuously building without interruption?</div>
             <div class="options">
-                <button class="opt-btn" onclick="selectScore(0, 2)">Fully Aligned</button>
-                <button class="opt-btn" onclick="selectScore(0, 1)">Mostly Aligned</button>
-                <button class="opt-btn" onclick="selectScore(0, 0)">Neutral</button>
-                <button class="opt-btn" onclick="selectScore(0, -1)">Misaligned</button>
-                <button class="opt-btn" onclick="selectScore(0, -2)">Fully Reversed</button>
+                <button class="opt-btn" onclick="selectOption(0, 2, this)">Fully Aligned</button>
+                <button class="opt-btn" onclick="selectOption(0, 1, this)">Mostly Aligned</button>
+                <button class="opt-btn" onclick="selectOption(0, 0, this)">Neutral</button>
+                <button class="opt-btn" onclick="selectOption(0, -1, this)">Misaligned</button>
+                <button class="opt-btn" onclick="selectOption(0, -2, this)">Fully Reversed</button>
             </div>
         </div>
 
-        <div class="q-block" id="group-1">
+        <div class="q-block" id="q1">
             <span class="q-title">2. Non-Interference</span>
             <div class="q-desc">Am I interfering with processes that should run alone?</div>
             <div class="options">
-                <button class="opt-btn" onclick="selectScore(1, 2)">Allowing</button>
-                <button class="opt-btn" onclick="selectScore(1, 1)">Mostly Soft</button>
-                <button class="opt-btn" onclick="selectScore(1, 0)">Neutral</button>
-                <button class="opt-btn" onclick="selectScore(1, -1)">Over-Intervening</button>
-                <button class="opt-btn" onclick="selectScore(1, -2)">Over-Control</button>
+                <button class="opt-btn" onclick="selectOption(1, 2, this)">Allowing</button>
+                <button class="opt-btn" onclick="selectOption(1, 1, this)">Mostly Soft</button>
+                <button class="opt-btn" onclick="selectOption(1, 0, this)">Neutral</button>
+                <button class="opt-btn" onclick="selectOption(1, -1, this)">Intervening</button>
+                <button class="opt-btn" onclick="selectOption(1, -2, this)">Over-Control</button>
             </div>
         </div>
 
-        <div class="q-block" id="group-2">
+        <div class="q-block" id="q2">
             <span class="q-title">3. Low Consumption</span>
             <div class="q-desc">Am I engaging in unnecessary resistance or conflict?</div>
             <div class="options">
-                <button class="opt-btn" onclick="selectScore(2, 2)">Low Friction</button>
-                <button class="opt-btn" onclick="selectScore(2, 1)">Mostly Low</button>
-                <button class="opt-btn" onclick="selectScore(2, 0)">Unclear</button>
-                <button class="opt-btn" onclick="selectScore(2, -1)">Rising Conflict</button>
-                <button class="opt-btn" onclick="selectScore(2, -2)">Energy Drain</button>
+                <button class="opt-btn" onclick="selectOption(2, 2, this)">Low Friction</button>
+                <button class="opt-btn" onclick="selectOption(2, 1, this)">Mostly Low</button>
+                <button class="opt-btn" onclick="selectOption(2, 0, this)">Unclear</button>
+                <button class="opt-btn" onclick="selectOption(2, -1, this)">Rising Conflict</button>
+                <button class="opt-btn" onclick="selectOption(2, -2, this)">Energy Drain</button>
             </div>
         </div>
 
-        <div class="q-block" id="group-3">
+        <div class="q-block" id="q3">
             <span class="q-title">4. Flexibility</span>
             <div class="q-desc">Is my response adaptive and resilient, or rigid?</div>
             <div class="options">
-                <button class="opt-btn" onclick="selectScore(3, 2)">Adaptive</button>
-                <button class="opt-btn" onclick="selectScore(3, 1)">Resilient</button>
-                <button class="opt-btn" onclick="selectScore(3, 0)">Neutral</button>
-                <button class="opt-btn" onclick="selectScore(3, -1)">Stiffening</button>
-                <button class="opt-btn" onclick="selectScore(3, -2)">Rigid</button>
+                <button class="opt-btn" onclick="selectOption(3, 2, this)">Adaptive</button>
+                <button class="opt-btn" onclick="selectOption(3, 1, this)">Resilient</button>
+                <button class="opt-btn" onclick="selectOption(3, 0, this)">Neutral</button>
+                <button class="opt-btn" onclick="selectOption(3, -1, this)">Stiffening</button>
+                <button class="opt-btn" onclick="selectOption(3, -2, this)">Rigid</button>
             </div>
         </div>
 
-        <div class="q-block" id="group-4">
-            <span class="q-title">5. Knowing When to Stop</span>
+        <div class="q-block" id="q4">
+            <span class="q-title">5. Knowing Stop</span>
             <div class="q-desc">Do I clearly know where to stop?</div>
             <div class="options">
-                <button class="opt-btn" onclick="selectScore(4, 2)">Controlled</button>
-                <button class="opt-btn" onclick="selectScore(4, 1)">Mostly Clear</button>
-                <button class="opt-btn" onclick="selectScore(4, 0)">Unsure</button>
-                <button class="opt-btn" onclick="selectScore(4, -1)">Over-Escalating</button>
-                <button class="opt-btn" onclick="selectScore(4, -2)">Out of Control</button>
+                <button class="opt-btn" onclick="selectOption(4, 2, this)">Controlled</button>
+                <button class="opt-btn" onclick="selectOption(4, 1, this)">Mostly Clear</button>
+                <button class="opt-btn" onclick="selectOption(4, 0, this)">Unsure</button>
+                <button class="opt-btn" onclick="selectOption(4, -1, this)">Escalating</button>
+                <button class="opt-btn" onclick="selectOption(4, -2, this)">Out of Control</button>
             </div>
         </div>
     </div>
@@ -136,7 +129,7 @@
         <div id="status-points" style="color: #888; font-weight: bold; margin-bottom: 25px;"></div>
 
         <div class="diag-card">
-            <h4>💡 Dual-Table Decision</h4>
+            <h4>💡 Decision Model</h4>
             <div id="decision-text" style="font-weight: 800; font-size: 1.2rem; color: var(--ink); margin-bottom: 5px;"></div>
             <div id="decision-desc" class="diag-text"></div>
         </div>
@@ -147,12 +140,12 @@
         </div>
 
         <div class="diag-card">
-            <h4>📜 Indicators Breakdown</h4>
+            <h4>📜 De Principles</h4>
             <div class="motto-grid">
-                <div class="motto-item"><strong>Accumulation</strong>Leaks occur when building stops.</div>
-                <div class="motto-item"><strong>Non-Interference</strong>Trust exceeds control.</div>
-                <div class="motto-item"><strong>Flexibility</strong>Adaptability prevents breaking.</div>
-                <div class="motto-item"><strong>Knowing Stop</strong>Restraint preserves energy.</div>
+                <div class="motto-item"><strong>Non-Ownership</strong>Create without possessing.</div>
+                <div class="motto-item"><strong>Non-Reliance</strong>Act without expectations.</div>
+                <div class="motto-item"><strong>Non-Dominance</strong>Lead without controlling.</div>
+                <div class="motto-item"><strong>Non-Contention</strong>Avoid friction, achieve peace.</div>
             </div>
         </div>
 
@@ -164,16 +157,19 @@
 <script>
     let scores = [null, null, null, null, null];
 
-    function selectScore(qIdx, val) {
+    // 改良的選擇邏輯：傳入 button 自己 (el)
+    function selectOption(qIdx, val, el) {
         scores[qIdx] = val;
-        const group = document.getElementById(`group-${qIdx}`);
-        const btns = group.querySelectorAll('.opt-btn');
+        
+        // 找到那一題的所有按鈕
+        const row = document.getElementById(`q${qIdx}`);
+        const btns = row.querySelectorAll('.opt-btn');
+        
+        // 先清除所有按鈕的 active
         btns.forEach(btn => btn.classList.remove('active'));
-        Array.from(btns).forEach(btn => {
-            if(btn.getAttribute('onclick').includes(val + ')')) {
-                btn.classList.add('active');
-            }
-        });
+        
+        // 只幫被點擊的這個按鈕加 active
+        el.classList.add('active');
     }
 
     function calculateResult() {
@@ -195,10 +191,8 @@
         const dDesc = document.getElementById('decision-desc');
         const analysis = document.getElementById('analysis-text');
 
-        // Points
         points.innerText = `Total Score: ${total}`;
 
-        // De Evaluation Logic
         if (total >= 6) {
             level.innerText = "STRONG DE"; level.style.color = "var(--safe)";
             seal.innerText = "Solid"; seal.style.borderColor = "var(--safe)"; seal.style.color = "var(--safe)";
@@ -207,32 +201,26 @@
             level.innerText = "WEAK DE"; level.style.color = "var(--gold)";
             seal.innerText = "Risk"; seal.style.borderColor = "var(--gold)"; seal.style.color = "var(--gold)";
             analysis.innerText = "Mixed state near threshold. Structure is loosening; dissipation is starting to rise.";
-        } else if (total >= -5) {
+        } else {
             level.innerText = "INSUFFICIENT"; level.style.color = "var(--stop)";
             seal.innerText = "Drain"; seal.style.borderColor = "var(--stop)"; seal.style.color = "var(--stop)";
-            analysis.innerText = "Dissipation exceeds accumulation. System is actively losing energy.";
-        } else {
-            level.innerText = "COUNTER-DE"; level.style.color = "var(--stop)";
-            seal.innerText = "BREAK"; seal.style.borderColor = "var(--stop)"; seal.style.color = "var(--stop)";
-            analysis.innerText = "Approaching breakdown. Massive systemic energy loss detected.";
+            analysis.innerText = "Dissipation exceeds accumulation. System approaching breakdown.";
         }
 
-        // Dual-Table Integration Logic
         const isDeStrong = total >= 0;
         if (situation === 'good' && isDeStrong) {
             dTitle.innerText = "ACT";
-            dDesc.innerText = "Good situation + Strong internal capacity. Execution will be effective.";
+            dDesc.innerText = "Good situation + Strong capacity. Proceed as planned.";
         } else if (situation === 'good' && !isDeStrong) {
             dTitle.innerText = "DO NOT ACT";
-            dDesc.innerText = "External opportunity exists, but internal De is dissipating. Failure is likely due to lack of carrying capacity.";
+            dDesc.innerText = "Opportunity exists, but internal De is dissipating. Failure likely.";
         } else if (situation === 'bad' && isDeStrong) {
             dTitle.innerText = "WAIT";
-            dDesc.innerText = "Bad situation but internal structure is stable. Preserve energy and wait for a shift in momentum.";
+            dDesc.innerText = "Bad situation but structure is stable. Preserve energy and wait.";
         } else {
             dTitle.innerText = "STOP IMMEDIATELY";
-            dDesc.innerText = "Bad situation + Collapsing internal De. Critical danger; cease all intervention.";
+            dDesc.innerText = "External & Internal collapse. Cease all intervention.";
         }
-
         window.scrollTo(0,0);
     }
 </script>
