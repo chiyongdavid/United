@@ -3,352 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>德的運作診斷表｜系統承載力檢測</title>
-    <script src="https://jsdelivr.net"></script>
+    <title>德的運作診斷報告 - 帛書老子研修社</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #8e44ad;
-            --danger: #c0392b;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --bg: #f8f9fa;
+            --bg: #f4f1ea; --ink: #2c2c2c; --accent: #8a7d6a; --gold: #b39964;
+            --stop: #c0392b; --safe: #27ae60; --paper: #ffffff;
         }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", serif; background: var(--bg); color: var(--ink); margin: 0; padding: 20px; line-height: 1.8; }
+        #quiz-app { background: var(--paper); max-width: 650px; margin: 0 auto; padding: 45px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #dcd7cf; }
+        
+        h1 { text-align: center; font-size: 1.8rem; letter-spacing: 5px; margin: 0 0 10px 0; }
+        .subtitle { text-align: center; color: var(--accent); font-size: 0.9rem; margin-bottom: 30px; display: block; border-bottom: 1px solid #eee; padding-bottom: 20px; }
 
-        body {
-            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-            background-color: var(--bg);
-            color: var(--primary);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
+        .q-block { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #f9f9f9; }
+        .q-title { font-weight: bold; font-size: 1.1rem; color: #333; margin-bottom: 5px; display: block; }
+        .q-desc { font-size: 0.85rem; color: #999; margin-bottom: 15px; }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+        .options { display: flex; gap: 6px; }
+        .opt-btn { flex: 1; padding: 12px 1px; font-size: 10px; border: 1px solid #eee; background: #fafafa; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+        .opt-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
 
-        header {
-            text-align: center;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
+        #submit-btn { width: 100%; padding: 20px; background: var(--ink); color: white; border: none; font-size: 1.2rem; cursor: pointer; margin-top: 20px; letter-spacing: 4px; font-weight: bold; }
 
-        h1 { margin: 0; font-size: 28px; letter-spacing: 2px; }
-        .subtitle { color: #666; font-size: 16px; margin-top: 10px; }
+        /* 結果診斷區 - 深度優化 */
+        #result-box { display: none; margin-top: 40px; text-align: center; animation: slideUp 0.6s ease-out; }
+        .indicator { width: 130px; height: 130px; border: 8px solid var(--ink); border-radius: 50%; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold; }
+        
+        .report-section { text-align: left; background: #fdfcf8; border: 1px solid #eee; padding: 25px; margin-bottom: 20px; border-left: 6px solid var(--gold); }
+        .report-section h4 { margin: 0 0 12px 0; color: var(--gold); font-size: 1.1rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 8px; letter-spacing: 2px; }
+        .report-text { font-size: 0.95rem; color: #444; }
+        .quote-box { background: #f9f9f9; padding: 15px; border-radius: 4px; font-size: 0.9rem; color: #666; border: 1px solid #eee; margin-top: 10px; font-style: italic; }
 
-        .intro-box {
-            background: #f1f4f7;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
+        /* 行動按鈕 */
+        .action-tag { display: inline-block; padding: 2px 12px; background: var(--ink); color: white; border-radius: 20px; font-size: 0.8rem; margin-bottom: 10px; }
 
-        .question-item {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
-
-        .question-item:hover { border-color: var(--accent); }
-
-        .question-title {
-            font-weight: bold;
-            font-size: 18px;
-            display: block;
-            margin-bottom: 15px;
-        }
-
-        .score-group {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .score-btn {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            background: white;
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .score-btn:hover { background: #f0f0f0; }
-        .score-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .decision-box {
-            background: #fffbe6;
-            border: 1px solid #ffe58f;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 18px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .submit-btn:hover { background: #000; }
-
-        /* 結果區 */
-        .result-section { display: none; margin-top: 40px; padding-top: 20px; border-top: 3px double #eee; }
-        .grade-banner {
-            font-size: 32px;
-            font-weight: bold;
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .summary-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: left;
-            border-left: 5px solid var(--primary);
-        }
-
-        .advice-box {
-            text-align: left;
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .advice-item { margin-bottom: 15px; }
-        .advice-tag {
-            display: inline-block;
-            background: var(--danger);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 5px;
-        }
-
-        #radarChart { max-width: 500px; margin: 0 auto; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>德的運作診斷表</h1>
-        <div class="subtitle">副題：檢視一個人、一個組織或一個決策是否正在耗散</div>
-    </header>
+<div id="quiz-app">
+    <h1>德的運作診斷報告</h1>
+    <span class="subtitle">帛書老子研修社｜生命系統承載力深度分析</span>
 
-    <div class="intro-box">
-        <strong>核心定義：</strong> 德，不是道德評分，而是檢查一個生命系統是否正在蓄養、低耗、柔韌、不失控。<br>
-        <strong>用法：</strong> 針對當下的自己、組織或決策，直覺給分。
-    </div>
-
-    <!-- 測驗題目 -->
-    <div id="quiz">
-        <div class="question-item" data-metric="蓄養">
-            <span class="question-title">1. 蓄養：我是否在持續累積，而沒有中斷或停滯？</span>
-            <div class="score-group">
-                <button class="score-btn" onclick="setScore(0, -2)">-2</button>
-                <button class="score-btn" onclick="setScore(0, -1)">-1</button>
-                <button class="score-btn" onclick="setScore(0, 0)">0</button>
-                <button class="score-btn" onclick="setScore(0, 1)">+1</button>
-                <button class="score-btn" onclick="setScore(0, 2)">+2</button>
+    <div id="questions-list">
+        <div class="q-block">
+            <span class="q-title">1. 蓄養 (Accumulation)</span>
+            <div class="q-desc">系統能量是否在持續累積？資源、信任與學習是否穩定？</div>
+            <div class="options" data-id="0">
+                <button class="opt-btn" onclick="setScore(0, 2)">持續累積</button>
+                <button class="opt-btn" onclick="setScore(0, 1)">大致穩定</button>
+                <button class="opt-btn" onclick="setScore(0, 0)">臨界停滯</button>
+                <button class="opt-btn" onclick="setScore(0, -1)">出現缺口</button>
+                <button class="opt-btn" onclick="setScore(0, -2)">嚴重耗損</button>
             </div>
         </div>
 
-        <div class="question-item" data-metric="不干擾">
-            <span class="question-title">2. 不干擾：我是否在干預本該自主運作的事？</span>
-            <div class="score-group">
-                <button class="score-btn" onclick="setScore(1, -2)">-2</button>
-                <button class="score-btn" onclick="setScore(1, -1)">-1</button>
-                <button class="score-btn" onclick="setScore(1, 0)">0</button>
-                <button class="score-btn" onclick="setScore(1, 1)">+1</button>
-                <button class="score-btn" onclick="setScore(1, 2)">+2</button>
+        <div class="q-block">
+            <span class="q-title">2. 不干擾 (Non-interference)</span>
+            <div class="q-desc">是否正在過度插手？不相信系統或他人的自然運作？</div>
+            <div class="options" data-id="1">
+                <button class="opt-btn" onclick="setScore(1, 2)">放手信任</button>
+                <button class="opt-btn" onclick="setScore(1, 1)">少許介入</button>
+                <button class="opt-btn" onclick="setScore(1, 0)">兩難干預</button>
+                <button class="opt-btn" onclick="setScore(1, -1)">忍不住管</button>
+                <button class="opt-btn" onclick="setScore(1, -2)">強行控制</button>
             </div>
         </div>
 
-        <div class="question-item" data-metric="低耗">
-            <span class="question-title">3. 低耗：我是否正在對抗，造成多餘消耗？</span>
-            <div class="score-group">
-                <button class="score-btn" onclick="setScore(2, -2)">-2</button>
-                <button class="score-btn" onclick="setScore(2, -1)">-1</button>
-                <button class="score-btn" onclick="setScore(2, 0)">0</button>
-                <button class="score-btn" onclick="setScore(2, 1)">+1</button>
-                <button class="score-btn" onclick="setScore(2, 2)">+2</button>
+        <div class="q-block">
+            <span class="q-title">3. 低耗 (Low Dissipation)</span>
+            <div class="q-desc">是否陷入為了「證明正確」而產生的對抗、爭鬥與虛耗？</div>
+            <div class="options" data-id="2">
+                <button class="opt-btn" onclick="setScore(2, 2)">避開衝突</button>
+                <button class="opt-btn" onclick="setScore(2, 1)">適度摩擦</button>
+                <button class="opt-btn" onclick="setScore(2, 0)">內耗增加</button>
+                <button class="opt-btn" onclick="setScore(2, -1)">對立嚴重</button>
+                <button class="opt-btn" onclick="setScore(2, -2)">能量劇耗</button>
             </div>
         </div>
 
-        <div class="question-item" data-metric="柔性">
-            <span class="question-title">4. 柔性：我的應對是柔韌的，還是僵硬的？</span>
-            <div class="score-group">
-                <button class="score-btn" onclick="setScore(3, -2)">-2</button>
-                <button class="score-btn" onclick="setScore(3, -1)">-1</button>
-                <button class="score-btn" onclick="setScore(3, 0)">0</button>
-                <button class="score-btn" onclick="setScore(3, 1)">+1</button>
-                <button class="score-btn" onclick="setScore(3, 2)">+2</button>
+        <div class="q-block">
+            <span class="q-title">4. 柔性 (Soft Stability)</span>
+            <div class="q-desc">應對變化時，是柔韌適應，還是剛硬、堅持且非黑即白？</div>
+            <div class="options" data-id="3">
+                <button class="opt-btn" onclick="setScore(3, 2)">若水順應</button>
+                <button class="opt-btn" onclick="setScore(3, 1)">尚有彈性</button>
+                <button class="opt-btn" onclick="setScore(3, 0)">普通平衡</button>
+                <button class="opt-btn" onclick="setScore(3, -1)">開始堅持</button>
+                <button class="opt-btn" onclick="setScore(3, -2)">僵硬對抗</button>
             </div>
         </div>
 
-        <div class="question-item" data-metric="知止">
-            <span class="question-title">5. 知止：我是否知道哪裡該停？</span>
-            <div class="score-group">
-                <button class="score-btn" onclick="setScore(4, -2)">-2</button>
-                <button class="score-btn" onclick="setScore(4, -1)">-1</button>
-                <button class="score-btn" onclick="setScore(4, 0)">0</button>
-                <button class="score-btn" onclick="setScore(4, 1)">+1</button>
-                <button class="score-btn" onclick="setScore(4, 2)">+2</button>
+        <div class="q-block">
+            <span class="q-title">5. 知止 (Control)</span>
+            <div class="q-desc">是否具備「停下來」的控制力？系統有沒有失控擴張？</div>
+            <div class="options" data-id="4">
+                <button class="opt-btn" onclick="setScore(4, 2)">止步不殆</button>
+                <button class="opt-btn" onclick="setScore(4, 1)">節制有度</button>
+                <button class="opt-btn" onclick="setScore(4, 0)">不慎追加</button>
+                <button class="opt-btn" onclick="setScore(4, -1)">擴張失衡</button>
+                <button class="opt-btn" onclick="setScore(4, -2)">完全失控</button>
             </div>
         </div>
     </div>
 
-    <div class="decision-box">
-        <label style="font-weight: bold; display: block; margin-bottom: 10px;">聯動：決策評量表判斷局勢</label>
-        <select id="situation" style="width:100%; padding:12px; font-size:16px;">
-            <option value="1">局好（道、德、物、器、勢皆正）</option>
-            <option value="-1">局差（結構不穩、條件不足）</option>
-        </select>
-    </div>
+    <button id="submit-btn" onclick="calculate()">【 獲 取 深度 診 斷 報 告 】</button>
 
-    <button class="submit-btn" onclick="runDiagnostic()">生成診斷報告</button>
+    <!-- 結果報告區 -->
+    <div id="result-box">
+        <div class="indicator" id="status-icon"></div>
+        <div id="status-title" style="font-size: 1.6rem; font-weight: bold; margin-bottom: 25px;"></div>
 
-    <!-- 結果顯示 -->
-    <div id="results" class="result-section">
-        <div id="gradeBanner" class="grade-banner"></div>
-        
-        <div class="summary-card">
-            <h3 id="decisionTitle" style="margin-top:0;"></h3>
-            <p id="decisionDesc"></p>
+        <div class="report-section">
+            <h4>💡 核心分析：系統在哪裡？</h4>
+            <div id="state-analysis" class="report-text"></div>
         </div>
 
-        <div style="margin: 30px 0;">
-            <canvas id="radarChart"></canvas>
+        <div class="report-section">
+            <div class="action-tag">當務之急</div>
+            <h4>⚙️ 行動指令：如何不壞掉？</h4>
+            <div id="action-guidance" class="report-text"></div>
+            <div class="quote-box" id="laozi-quote"></div>
         </div>
 
-        <div class="advice-box" id="adviceBox">
-            <h3>💡 行動指南（對症下藥）</h3>
-            <div id="adviceContent"></div>
+        <div class="report-section" id="warning-section" style="display:none; border-left-color: var(--stop);">
+            <h4 style="color:var(--stop)">⚠️ 失德點警示</h4>
+            <div id="warning-text" class="report-text"></div>
         </div>
 
-        <p style="text-align: center; color: #888; font-size: 13px; margin-top: 40px;">
-            德，不是讓事情變得更好，而是讓事情不會壞掉。
-        </p>
-        <button onclick="location.reload()" style="background:none; border:1px solid #ccc; width:100%; padding:10px; cursor:pointer; color:#999;">重新測驗</button>
+        <div style="font-size: 0.85rem; color: #888; margin-top: 40px; text-align: center;">
+            <p>「慎終若始，則無敗事。」</p>
+            <button onclick="location.reload()" style="background:none; border:none; color:var(--accent); cursor:pointer; text-decoration: underline;">重新進行五維診斷</button>
+        </div>
     </div>
 </div>
 
 <script>
     let scores = [null, null, null, null, null];
     const metrics = ["蓄養", "不干擾", "低耗", "柔性", "知止"];
-    const adviceLib = {
-        "蓄養": "資源正在流失！建議：停止擴張，檢視你的學習與關係維護，重新回到『重積德』的蓄留狀態。",
-        "不干擾": "干預過度！建議：練習『處下』，相信系統的自主性。不強行控制，結構才不會破壞。",
-        "低耗": "能量耗散！建議：停止對抗與權力鬥爭。不要試圖證明自己是對的，這不值得消耗能量。",
-        "柔性": "過於剛硬！建議：學習『弱之勝強』，應對需柔韌，非黑即白的堅持容易導致系統崩解。",
-        "知止": "失控擴張！建議：啟動『節制』。現在是需要『止』的環節，明確邊界，不追加資源。"
-    };
 
     function setScore(idx, val) {
         scores[idx] = val;
-        const btnGroup = document.querySelectorAll('.score-group')[idx];
-        const btns = btnGroup.querySelectorAll('.score-btn');
-        btns.forEach(b => b.classList.remove('active'));
-        // 找到對應值的按鈕
-        Array.from(btns).find(b => parseInt(b.innerText) === val).classList.add('active');
+        const row = document.querySelectorAll('.options')[idx];
+        Array.from(row.children).forEach(b => {
+            b.classList.remove('active');
+            if(b.getAttribute('onclick').includes(val)) b.classList.add('active');
+        });
     }
 
-    function runDiagnostic() {
-        if (scores.includes(null)) return alert("請先完成所有診斷指標給分！");
-
+    function calculate() {
+        if (scores.includes(null)) return alert("請完成所有維度的叩問再生成報告。");
         const total = scores.reduce((a, b) => a + b, 0);
-        const situation = parseInt(document.getElementById('situation').value);
-        document.getElementById('results').style.display = 'block';
+        document.getElementById('result-box').style.display = 'block';
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('questions-list').style.display = 'none';
 
-        // 1. 判斷等級
-        const banner = document.getElementById('gradeBanner');
-        if (total >= 6) { banner.innerText = "德充足 (蓄養 > 耗散)"; banner.style.backgroundColor = "#27ae60"; }
-        else if (total >= 0) { banner.innerText = "德偏弱 (臨界狀態)"; banner.style.backgroundColor = "#f39c12"; }
-        else if (total >= -5) { banner.innerText = "德不足 (耗散開始)"; banner.style.backgroundColor = "#e67e22"; }
-        else { banner.innerText = "逆德運作 (面臨崩解)"; banner.style.backgroundColor = "#c0392b"; }
+        const icon = document.getElementById('status-icon');
+        const title = document.getElementById('status-title');
+        const state = document.getElementById('state-analysis');
+        const action = document.getElementById('action-guidance');
+        const quote = document.getElementById('laozi-quote');
+        const warningSection = document.getElementById('warning-section');
+        const warningText = document.getElementById('warning-text');
 
-        // 2. 聯動決策
-        const dTitle = document.getElementById('decisionTitle');
-        const dDesc = document.getElementById('decisionDesc');
-        const deIsPositive = total >= 0;
+        // 診斷深度邏輯
+        if (total >= 6) {
+            icon.innerText = "德充"; icon.style.borderColor = "var(--safe)"; icon.style.color = "var(--safe)";
+            title.innerText = "狀態：順道累積｜系統正向蓄養";
+            state.innerHTML = "目前系統運作順暢，<b>蓄養能量遠大於消耗能量</b>。萬物自然流轉且無衝突。這代表你建立了一個具備「自癒力」與「抗風險力」的結構。";
+            action.innerHTML = "繼續保持「不干預」的智慧。在穩健中順勢推動小幅度的轉化，讓系統在變動中持續穩定生長。";
+            quote.innerText = "《老子》：「上德無為而無以為。」";
+        } else if (total >= 0) {
+            icon.innerText = "臨界"; icon.style.borderColor = "var(--gold)"; icon.style.color = "var(--gold)";
+            title.innerText = "狀態：臨界邊緣｜結構開始鬆動";
+            state.innerHTML = "目前正負能量交雜。雖然系統尚可維持，但<b>微小的耗散正在發生</b>。可能是資源流失、也可能是你因為焦慮而開始增加不必要的干預。";
+            action.innerHTML = "<b>立即進入「蓄」的環節。</b>停止所有擴張與證明自己的行為，重新檢視內部資源。當前的穩定是脆弱的，你需要重新蓄積承載力。";
+            quote.innerText = "《老子》：「重積德則無不克。」";
+        } else {
+            icon.innerText = "德散"; icon.style.borderColor = "var(--stop)"; icon.style.color = "var(--stop)";
+            title.innerText = "狀態：逆德耗散｜結構瀕臨崩解";
+            state.innerHTML = "系統處於劇烈耗散中。<b>消耗速度已遠遠超過累積</b>。目前的剛硬對抗、強行控制正像火燒一樣快速毀壞結構，隨時可能斷裂。";
+            action.innerHTML = "<b>唯一命令：進入「止」的環節。</b>停止所有投資、干預與爭鬥。這不是放棄，而是止血。唯有停止耗損，才有機會避免毀滅性的崩解。";
+            quote.innerText = "《老子》：「知止可以不殆。」";
+        }
 
-        if (situation === 1 && deIsPositive) { dTitle.innerText = "判斷：可以動"; dDesc.innerText = "局好且德正。系統有承載力，可順勢而為。"; }
-        else if (situation === 1 && !deIsPositive) { dTitle.innerText = "判斷：不要動"; dDesc.innerText = "局雖好但德差。此時行動會因為內在耗散而導致失敗。"; }
-        else if (situation === -1 && deIsPositive) { dTitle.innerText = "判斷：可以等"; dDesc.innerText = "局差但德正。內在穩健，請保持蓄養，等待外部環境轉變。"; }
-        else { dTitle.innerText = "判斷：必須止"; dDesc.innerText = "局差且德差。雙重危機，請立即停止所有運作與投入。"; }
+        // 失德點警示深度化
+        let alertMsg = "";
+        if (scores[0] <= -1) alertMsg += "<li><b>蓄養缺口：</b>學習或關係已停滯，資源持續外流。</li>";
+        if (scores[1] <= -1) alertMsg += "<li><b>過度干預：</b>你的手伸得太長，正在摧毀原本健康的系統自主性。</li>";
+        if (scores[2] <= -1) alertMsg += "<li><b>能量黑洞：</b>陷入對抗與鬥爭中，這些虛耗完全沒有產出。</li>";
+        if (scores[4] <= -1) alertMsg += "<li><b>失控崩壞：</b>缺乏知止的能力，正朝著懸崖加速前行。</li>";
 
-        // 3. 行動指南 (針對負分)
-        const adviceDiv = document.getElementById('adviceContent');
-        adviceDiv.innerHTML = "";
-        scores.forEach((s, i) => {
-            if (s < 0) {
-                const item = document.createElement('div');
-                item.className = "advice-item";
-                item.innerHTML = `<span class="advice-tag">${s === -2 ? '緊急' : '需調整'}</span> <strong>${metrics[i]}：</strong> ${adviceLib[metrics[i]]}`;
-                adviceDiv.appendChild(item);
-            }
-        });
-        if (adviceDiv.innerHTML === "") adviceDiv.innerHTML = "系統運作良好，請繼續保持正向蓄養。";
+        if (alertMsg) {
+            warningSection.style.display = 'block';
+            warningText.innerHTML = `<ul style="margin:0; padding-left:20px;">${alertMsg}</ul>`;
+        }
 
-        // 4. 圖表
-        renderChart();
-        window.scrollTo({ top: document.getElementById('results').offsetTop, behavior: 'smooth' });
-    }
-
-    function renderChart() {
-        const ctx = document.getElementById('radarChart').getContext('2d');
-        if (window.myChart) window.myChart.destroy();
-        window.myChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: metrics,
-                datasets: [{
-                    label: '德的運作強度 (-2 到 +2)',
-                    data: scores,
-                    backgroundColor: 'rgba(44, 62, 80, 0.2)',
-                    borderColor: '#2c3e50',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#c0392b'
-                }]
-            },
-            options: {
-                scales: {
-                    r: {
-                        min: -2,
-                        max: 2,
-                        ticks: { display: false, stepSize: 1 }
-                    }
-                }
-            }
-        });
+        window.scrollTo(0,0);
     }
 </script>
 
