@@ -3,267 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>老子系統導航全診斷</title>
+    <title>五維決策與德性診斷 - 終極聯動版</title>
     <style>
         :root {
-            --bg: #f4f1ea; --ink: #1a1a1a; --accent: #8a7d6a; --gold: #b39964;
-            --stop: #d0021b; --wait: #4a90e2; --store: #50e3c2; --move: #00c853; --shift: #9013fe;
-            --paper: #ffffff;
+            --bg: #f4f1ea; --ink: #1a1a1a; --gold: #b39964;
+            --stop: #d0021b; --wait: #4a90e2; --store: #50e3c2; --move: #00c853;
         }
         body { font-family: "PingFang TC", "Microsoft JhengHei", serif; background: var(--bg); color: var(--ink); margin: 0; padding: 15px; display: flex; justify-content: center; }
-        #app-container { background: var(--paper); max-width: 600px; width: 100%; padding: 35px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #dcd7cf; }
-        
-        h1 { text-align: center; font-size: 1.6rem; letter-spacing: 4px; margin: 0 0 10px 0; }
-        .section-header { background: var(--ink); color: white; padding: 10px; margin: 25px 0 15px; font-weight: bold; letter-spacing: 2px; text-align: center; border-radius: 2px; }
-        
+        #app-container { background: #fff; max-width: 600px; width: 100%; padding: 35px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #dcd7cf; }
+        h1 { text-align: center; font-size: 1.6rem; letter-spacing: 4px; }
+        .section-header { background: var(--ink); color: white; padding: 10px; margin: 25px 0 15px; font-weight: bold; text-align: center; }
         .q-block { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f2f2f2; }
         .q-title { font-weight: 700; margin-bottom: 6px; display: block; color: #333; font-size: 1rem; }
         .q-desc { font-size: 0.8rem; color: #999; margin-bottom: 10px; }
-
         .options { display: flex; gap: 4px; justify-content: space-between; }
         .opt-btn { flex: 1; padding: 12px 1px; font-size: 10px; border: 1px solid #eee; background: #fafafa; cursor: pointer; border-radius: 4px; font-weight: 600; color: #666; transition: 0.2s; }
-        .opt-btn.active { background: var(--ink) !important; color: white !important; border-color: var(--ink) !important; }
+        .opt-btn.active { background: var(--ink) !important; color: white !important; }
+        #submit-btn { width: 100%; padding: 20px; background: var(--ink); color: white; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
 
-        #submit-btn { width: 100%; padding: 20px; background: var(--ink); color: white; border: none; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 20px; letter-spacing: 4px; }
-
-        /* 結果顯示區 */
+        /* 結果顯示 */
         #result-box { display: none; margin-top: 30px; text-align: center; animation: zoomIn 0.5s ease-out; }
-        .indicator-circle {
-            width: 160px; height: 160px; border: 8px solid currentColor; border-radius: 50%;
-            margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
-            position: relative; background: #fff;
-        }
-        .status-text { font-size: 3.5rem; font-weight: 900; letter-spacing: -2px; background: #fff; padding: 0 10px; position: absolute; z-index: 10; }
-        .desc-text { font-size: 1.6rem; font-weight: 800; color: #2c2c2c; margin-top: 10px; letter-spacing: 2px; }
-
-        .diag-card { text-align: left; background: #fdfcf8; border: 1px solid #eee; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--gold); }
-        .diag-card h4 { margin: 0 0 10px 0; color: var(--gold); font-size: 1rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 5px; text-transform: uppercase; }
+        .indicator-circle { width: 150px; height: 150px; border: 8px solid currentColor; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative; background: #fff; }
+        .status-text { font-size: 3rem; font-weight: 900; background: #fff; padding: 0 10px; position: absolute; z-index: 10; }
+        
+        /* 雙表坐標診斷卡 */
+        .coordinate-card { text-align: left; background: #fdfcf8; border: 2px solid var(--gold); padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .coordinate-card h4 { margin: 0 0 10px 0; color: var(--gold); font-size: 1.1rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 5px; }
+        .matrix-title { font-weight: bold; color: var(--ink); display: block; margin-bottom: 5px; font-size: 1.2rem; }
         .diag-text { font-size: 0.95rem; line-height: 1.7; color: #444; }
-
-        .footer { font-style: italic; color: var(--accent); margin-top: 40px; border-top: 1px double #ddd; padding-top: 20px; font-size: 0.9rem; text-align: center; }
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes zoomIn { from { transform: scale(0.9); } to { transform: scale(1); } }
     </style>
 </head>
 <body>
 
 <div id="app-container">
-    <h1>系統導航全診斷</h1>
-    <p style="text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 20px;">帛書老子研修社｜內外雙表聯動系統</p>
-
+    <h1>決策運作雙表診斷系統</h1>
     <div id="quiz-flow">
-        <!-- 第一部分：決策導航 (外在局勢) -->
-        <div class="section-header">壹、決策導航 (外部局勢)</div>
-        
-        <div class="q-block" id="q-0">
-            <span class="q-title">1. 道：方向是否契合？</span>
-            <div class="q-desc">是否符合自然生成的規律？無違反大勢本質？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(0, 2, this)">明確成立</button>
-                <button class="opt-btn" onclick="selectScore(0, 1, this)">大致成立</button>
-                <button class="opt-btn" onclick="selectScore(0, 0, this)">不確定</button>
-                <button class="opt-btn" onclick="selectScore(0, -1, this)">有所偏差</button>
-                <button class="opt-btn" onclick="selectScore(0, -2, this)">不成立</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-1">
-            <span class="q-title">2. 德：承載力是否足夠？</span>
-            <div class="q-desc">我目前的身心與系統能量，是否承受得住此決策？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(1, 2, this)">承載充裕</button>
-                <button class="opt-btn" onclick="selectScore(1, 1, this)">尚可維持</button>
-                <button class="opt-btn" onclick="selectScore(1, 0, this)">不確定</button>
-                <button class="opt-btn" onclick="selectScore(1, -1, this)">承載轉弱</button>
-                <button class="opt-btn" onclick="selectScore(1, -2, this)">難以負荷</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-2">
-            <span class="q-title">3. 物：外部資源是否具備？</span>
-            <div class="q-desc">資金、人脈、環境等客觀條件是否到位？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(2, 2, this)">條件成熟</button>
-                <button class="opt-btn" onclick="selectScore(2, 1, this)">基本具備</button>
-                <button class="opt-btn" onclick="selectScore(2, 0, this)">尚不明朗</button>
-                <button class="opt-btn" onclick="selectScore(2, -1, this)">資源欠缺</button>
-                <button class="opt-btn" onclick="selectScore(2, -2, this)">不具備</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-3">
-            <span class="q-title">4. 器：工具手段是否可行？</span>
-            <div class="q-desc">技術、方法、流程是否足以達成目標？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(3, 2, this)">手段純熟</button>
-                <button class="opt-btn" onclick="selectScore(3, 1, this)">基本可行</button>
-                <button class="opt-btn" onclick="selectScore(3, 0, this)">需要磨合</button>
-                <button class="opt-btn" onclick="selectScore(3, -1, this)">工具不足</button>
-                <button class="opt-btn" onclick="selectScore(3, -2, this)">不可行</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-4">
-            <span class="q-title">5. 勢：時機是否契合？</span>
-            <div class="q-desc">當下環境的張力如何？時機成熟還是操之過急？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(4, 2, this)">時機契合</button>
-                <button class="opt-btn" onclick="selectScore(4, 1, this)">節奏尚可</button>
-                <button class="opt-btn" onclick="selectScore(4, 0, this)">觀望中</button>
-                <button class="opt-btn" onclick="selectScore(4, -1, this)">時機不對</button>
-                <button class="opt-btn" onclick="selectScore(4, -2, this)">時機已過</button>
-            </div>
-        </div>
-
-        <!-- 第二部分：德診斷 (內在運作) -->
-        <div class="section-header">貳、運作診斷 (內部德性)</div>
-
-        <div class="q-block" id="q-5">
-            <span class="q-title">6. 蓄養：能量是否持續累積？</span>
-            <div class="q-desc">生成是否不斷？有無中斷或停滯？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(5, 2, this)">持續累積</button>
-                <button class="opt-btn" onclick="selectScore(5, 1, this)">大致穩定</button>
-                <button class="opt-btn" onclick="selectScore(5, 0, this)">臨界停滯</button>
-                <button class="opt-btn" onclick="selectScore(5, -1, this)">出現缺口</button>
-                <button class="opt-btn" onclick="selectScore(5, -2, this)">嚴重耗損</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-6">
-            <span class="q-title">7. 不干擾：是否過度干預？</span>
-            <div class="q-desc">是否正在強行控制本該自主運作的人或事？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(6, 2, this)">放手信任</button>
-                <button class="opt-btn" onclick="selectScore(6, 1, this)">少許介入</button>
-                <button class="opt-btn" onclick="selectScore(6, 0, this)">兩難干預</button>
-                <button class="opt-btn" onclick="selectScore(6, -1, this)">忍不住管</button>
-                <button class="opt-btn" onclick="selectScore(6, -2, this)">強行控制</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-7">
-            <span class="q-title">8. 低耗：是否陷入無謂對抗？</span>
-            <div class="q-desc">是否為了證明正確而造成不必要的能量內耗？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(7, 2, this)">避開衝突</button>
-                <button class="opt-btn" onclick="selectScore(7, 1, this)">低度消耗</button>
-                <button class="opt-btn" onclick="selectScore(7, 0, this)">磨擦增加</button>
-                <button class="opt-btn" onclick="selectScore(7, -1, this)">陷入鬥爭</button>
-                <button class="opt-btn" onclick="selectScore(7, -2, this)">劇烈內耗</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-8">
-            <span class="q-title">9. 柔性：應對是否柔韌順應？</span>
-            <div class="q-desc">是僵硬對立、非黑即白，還是順勢轉化？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(8, 2, this)">若水柔韌</button>
-                <button class="opt-btn" onclick="selectScore(8, 1, this)">尚有彈性</button>
-                <button class="opt-btn" onclick="selectScore(8, 0, this)">普通平衡</button>
-                <button class="opt-btn" onclick="selectScore(8, -1, this)">開始僵硬</button>
-                <button class="opt-btn" onclick="selectScore(8, -2, this)">剛硬易折</button>
-            </div>
-        </div>
-
-        <div class="q-block" id="q-9">
-            <span class="q-title">10. 知止：是否具備節制力？</span>
-            <div class="q-desc">是否知道在哪裡停步？有無失控擴張？</div>
-            <div class="options">
-                <button class="opt-btn" onclick="selectScore(9, 2, this)">知止不殆</button>
-                <button class="opt-btn" onclick="selectScore(9, 1, this)">節制有度</button>
-                <button class="opt-btn" onclick="selectScore(9, 0, this)">不慎追加</button>
-                <button class="opt-btn" onclick="selectScore(9, -1, this)">擴張失衡</button>
-                <button class="opt-btn" onclick="selectScore(9, -2, this)">完全失控</button>
-            </div>
-        </div>
+        <div class="section-header">壹、局勢判斷 (外部位能)</div>
+        <div id="questions-1"></div> <!-- 1-5 題 -->
+        <div class="section-header">貳、德性診斷 (內部動能)</div>
+        <div id="questions-2"></div> <!-- 6-10 題 -->
     </div>
-
-    <button id="submit-btn" onclick="calculateResult()">【 獲 取 終 極 診 斷 報 告 】</button>
+    <button id="submit-btn" onclick="calculateResult()">【 獲取雙表聯動報告 】</button>
 
     <div id="result-box">
-        <div class="indicator-circle" id="circle-box">
-            <span class="status-text" id="status-display"></span>
-        </div>
-        <div class="desc-text" id="desc-display"></div>
-
-        <div class="diag-card">
-            <h4>💡 雙表聯動診斷</h4>
-            <div id="analysis-text" class="diag-text"></div>
+        <div class="indicator-circle" id="circle-box"><span class="status-text" id="status-display"></span></div>
+        
+        <div class="coordinate-card">
+            <h4>📊 雙表聯動坐標：系統狀態</h4>
+            <span class="matrix-title" id="matrix-name"></span>
+            <div id="matrix-desc" class="diag-text"></div>
         </div>
 
-        <div class="diag-card">
+        <div class="coordinate-card" style="border-color: #888;">
             <h4>⚙️ 行動指令詳解</h4>
             <div id="guide-text" class="diag-text"></div>
         </div>
 
-        <div class="footer">
-            「局告訴你在哪裡，德告訴你能不能動。」<br>
-            慎終若始，則無敗事。
-        </div>
-        <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:var(--accent); cursor:pointer; text-decoration: underline;">← 重新開始掃描</button>
+        <button onclick="location.reload()" style="margin-top:20px; background:none; border:none; color:#888; cursor:pointer; text-decoration: underline;">← 重新開始診斷</button>
     </div>
 </div>
 
 <script>
+    const qData1 = [
+        { title: "1. 道：方向契合", desc: "符合自然生成規律？無違反大勢本質？" },
+        { title: "2. 德：承載力", desc: "目前的身心能量是否能承受此變動？" },
+        { title: "3. 物：外部資源", desc: "資金、資源、環境條件是否到位？" },
+        { title: "4. 器：手段可行", desc: "技術、方法、流程是否足以達成目標？" },
+        { title: "5. 勢：時機契合", desc: "當下時機成熟還是操之過急？" }
+    ];
+    const qData2 = [
+        { title: "6. 蓄養：能量積累", desc: "能量是否在持續累積？有無中斷或流失？" },
+        { title: "7. 不干擾：自主運作", desc: "是否過度干預本該自主運作的事？" },
+        { title: "8. 低耗：避開對抗", desc: "是否為了證明正確而造成多餘內耗？" },
+        { title: "9. 柔性：順應變化", desc: "是僵硬對立，還是若水柔韌順應？" },
+        { title: "10. 知止：節制邊界", desc: "是否知道停在哪？有無失控擴張？" }
+    ];
+
     let scores = Array(10).fill(null);
 
-    function selectScore(idx, val, btn) {
-        scores[idx] = val;
-        const parent = document.getElementById(`q-${idx}`);
-        parent.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    function createQs(target, data, startIdx) {
+        const container = document.getElementById(target);
+        data.forEach((q, i) => {
+            const idx = startIdx + i;
+            const div = document.createElement('div');
+            div.className = 'q-block';
+            div.id = `q-${idx}`;
+            div.innerHTML = `<span class="q-title">${q.title}</span><div class="q-desc">${q.desc}</div><div class="options"></div>`;
+            const opts = div.querySelector('.options');
+            ["明確成立", "大致成立", "不確定", "有所偏差", "不成立"].forEach((t, scoreIdx) => {
+                const val = 2 - scoreIdx;
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn'; btn.innerText = t;
+                btn.onclick = () => { scores[idx] = val; Array.from(opts.children).forEach(b => b.classList.remove('active')); btn.classList.add('active'); };
+                opts.appendChild(btn);
+            });
+            container.appendChild(div);
+        });
     }
 
-    function calculateResult() {
-        if (scores.includes(null)) return alert("請完成所有 10 項維度的叩問。");
+    createQs('questions-1', qData1, 0);
+    createQs('questions-2', qData2, 5);
 
-        const total1 = scores.slice(0, 5).reduce((a, b) => a + b, 0); // 決策分
-        const total2 = scores.slice(5, 10).reduce((a, b) => a + b, 0); // 德運作分
-        const totalAll = total1 + total2;
+    function calculateResult() {
+        if (scores.includes(null)) return alert("請完成所有 10 項叩問。");
+        const局勢分 = scores.slice(0, 5).reduce((a, b) => a + b, 0);
+        const德性分 = scores.slice(5, 10).reduce((a, b) => a + b, 0);
         
         document.getElementById('result-box').style.display = 'block';
-        document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('quiz-flow').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
 
         const icon = document.getElementById('status-display');
         const box = document.getElementById('circle-box');
-        const desc = document.getElementById('desc-display');
-        const analysis = document.getElementById('analysis-text');
+        const mName = document.getElementById('matrix-name');
+        const mDesc = document.getElementById('matrix-desc');
         const guide = document.getElementById('guide-text');
 
-        // 雙表聯動邏輯
-        const daoScore = scores[0];
-        const shiScore = scores[4];
-        
-        if (daoScore <= -1 || totalAll < -5) {
-            icon.innerText = "止"; box.style.color = "var(--stop)";
-            desc.innerText = "立 即 止 損";
-            analysis.innerHTML = "<b>系統警示：</b>方向（道）錯誤或全系統嚴重耗散。內部結構已無法支撐任何變動。";
-            guide.innerHTML = "停止所有投入。現在的行動不是在建設，而是在毀滅剩餘的資源。唯有「止」，才有機會重生。";
-        } else if (shiScore <= -1) {
-            icon.innerText = "轉"; box.style.color = "var(--shift)";
-            desc.innerText = "順 勢 轉 向";
-            analysis.innerHTML = "<b>環境張力不契合：</b>方向雖正，但時機（勢）不對。強推會產生巨大的對抗耗損。";
-            guide.innerHTML = "調整策略。不宜硬闖，改用繞道或轉型的方式，尋求與當下環境張力的重新契合。";
-        } else if (total1 >= 6 && total2 >= 6) {
+        // 雙表聯動：定義四個象限的特殊意義
+        if (局勢分 >= 2 && 德性分 >= 2) {
             icon.innerText = "動"; box.style.color = "var(--move)";
-            desc.innerText = "果 斷 行 動";
-            analysis.innerHTML = "<b>內外契合：</b>外部局勢大好且內在德性充足（不耗散）。這是系統承載力最強的時刻。";
-            guide.innerHTML = "全力以赴。以最小的干預達成最大的效果，保持節奏，順應自然流轉。";
-        } else if (total2 < 2) {
-            icon.innerText = "蓄"; box.style.color = "var(--store)";
-            desc.innerText = "養 精 蓄 銳";
-            analysis.innerHTML = "<b>內在耗散預警：</b>外部看起來有機會，但內在承載力不足，結構正在鬆動。";
-            guide.innerHTML = "停止擴張，回歸「蓄」。重新累積能量與信用。德不足而動，必因內耗而自敗。";
-        } else {
+            mName.innerText = "【 氣投意合 】：外順內穩";
+            mDesc.innerText = "外有天時地利（局勢分：" + 局勢分 + "），內有穩健承載（德性分：" + 德性分 + "）。這是系統最契合的狀態。";
+            guide.innerText = "果斷執行。目前的行動能以最小損耗達成最大效果。";
+        } else if (局勢分 >= 2 && 德性分 < 2) {
+            icon.innerText = "止"; box.style.color = "var(--stop)";
+            mName.innerText = "【 金玉其外 】：外強內虛";
+            mDesc.innerText = "外部看起來是機會，但內部德性分（" + 德性分 + "）顯示系統正在耗散。這是一個致命陷阱。";
+            guide.innerText = "絕對不要動！內部的脆弱（德不足）會讓你無法承載外在的機會，動則必自敗。";
+        } else if (局勢分 < 2 && 德性分 >= 2) {
             icon.innerText = "等"; box.style.color = "var(--wait)";
-            desc.innerText = "觀 望 等 待";
-            analysis.innerHTML = "<b>態勢不明：</b>方向尚可，但時機或資源尚未完全到位。";
-            guide.innerHTML = "保持靜定。等待「勢」的轉變。不妄動是為了保全能量，在最契合的瞬間出擊。";
+            mName.innerText = "【 潛龍勿用 】：外冷內實";
+            mDesc.innerText = "外部環境不具備條件（局勢分：" + 局勢分 + "），但你內在累積厚實（德性分：" + 德性分 + "）。";
+            guide.innerText = "保持靜定。現在是觀勢期，不要為了動而動。守住德性，等待局勢轉向。";
+        } else {
+            icon.innerText = "蓄"; box.style.color = "var(--store)";
+            mName.innerText = "【 枯竭斷裂 】：內外交困";
+            mDesc.innerText = "內外皆處於低位。系統正在全方位耗散，既無方向也無動力。";
+            guide.innerText = "停止所有外部活動。將所有精力轉向內部「重積德」，先保命、再蓄能。";
         }
         window.scrollTo(0,0);
     }
 </script>
-
 </body>
 </html>
