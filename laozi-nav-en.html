@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laozi Navigation System - Decision Dashboard</title>
+    <style>
+        :root {
+            --bg: #f4f1ea; --ink: #2c2c2c; --accent: #8a7d6a; --gold: #b39964;
+            --stop: #c0392b; --wait: #5d9cec; --store: #4fc1e9; --move: #27ae60; --shift: #ac92ec;
+            --paper: #ffffff;
+        }
+        body { font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--ink); margin: 0; padding: 15px; display: flex; justify-content: center; min-height: 100vh; }
+        
+        #quiz-app { background: var(--paper); max-width: 520px; width: 100%; padding: 30px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #dcd7cf; position: relative; }
+        
+        h1 { text-align: center; font-size: 1.5rem; letter-spacing: 2px; margin: 0 0 5px 0; font-weight: 800; text-transform: uppercase; }
+        .subtitle { text-align: center; color: var(--accent); font-size: 0.8rem; margin-bottom: 20px; display: block; border-bottom: 1px solid #eee; padding-bottom: 15px; text-transform: uppercase; font-weight: 600; }
+        
+        .intro-box { background: #fdfcf8; padding: 15px; border: 1px dashed var(--accent); margin-bottom: 25px; font-size: 0.85rem; line-height: 1.5; color: #555; }
+
+        .q-block { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #f7f7f7; }
+        .q-title { font-weight: 700; margin-bottom: 4px; display: block; color: #333; font-size: 1rem; }
+        .q-desc { font-size: 0.8rem; color: #999; margin-bottom: 10px; line-height: 1.4; }
+
+        .options { display: flex; gap: 4px; justify-content: space-between; }
+        .opt-btn { 
+            flex: 1; padding: 10px 1px; font-size: 9px; border: 1px solid #eee; 
+            background: #fafafa; cursor: pointer; border-radius: 4px; transition: 0.2s; 
+            color: #666; outline: none; text-transform: uppercase; font-weight: 600;
+        }
+        .opt-btn.active { background: var(--ink) !important; color: white !important; border-color: var(--ink) !important; }
+
+        #submit-btn { width: 100%; padding: 18px; background: var(--ink); color: white; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 10px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Navigation Output UI */
+        #result-box { display: none; margin-top: 25px; text-align: center; animation: fadeIn 0.6s ease-out; }
+        
+        .nav-indicator {
+            width: 120px; height: 120px; border: 8px solid var(--ink); border-radius: 50%;
+            margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;
+            background: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        .status-big { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+        .desc-tag { font-size: 1.3rem; font-weight: 800; color: #2c2c2c; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; }
+
+        .diag-card { text-align: left; background: #fdfcf8; border: 1px solid #eee; padding: 18px; margin-bottom: 12px; border-left: 5px solid var(--gold); }
+        .diag-card h4 { margin: 0 0 8px 0; color: var(--gold); font-size: 0.95rem; border-bottom: 1px solid #f0e6cc; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .diag-text { font-size: 0.88rem; line-height: 1.6; color: #444; }
+
+        .final-quote { font-style: italic; color: var(--accent); margin-top: 30px; border-top: 1px double #ddd; padding-top: 20px; font-size: 0.85rem; text-align: center; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div id="quiz-app">
+    <h1>Laozi Navigation System</h1>
+    <span class="subtitle">Decision Dashboard – Five Dimensions Check</span>
+    
+    <div class="intro-box">
+        <strong>What this tool does:</strong> This is a decision calibration system. It helps you see clearly whether the direction is correct (Dao), whether you can sustain it (De), and if the timing is right.
+    </div>
+
+    <div id="questions-list">
+        <!-- 1. Dao -->
+        <div class="q-block" id="q0">
+            <span class="q-title">1. Dao (Alignment)</span>
+            <div class="q-desc">Is this decision consistent with the underlying pattern of reality?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectOption(0, 2, this)">Aligned</button>
+                <button class="opt-btn" onclick="selectOption(0, 1)">Mostly</button>
+                <button class="opt-btn" onclick="selectOption(0, 0)">Uncertain</button>
+                <button class="opt-btn" onclick="selectOption(0, -1)">Misaligned</button>
+                <button class="opt-btn" onclick="selectOption(0, -2)">Flawed</button>
+            </div>
+        </div>
+
+        <!-- 2. De -->
+        <div class="q-block" id="q1">
+            <span class="q-title">2. De (Sustainability)</span>
+            <div class="q-desc">Can I (or the system) carry this through without overstraining?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectOption(1, 2, this)">Sustainable</button>
+                <button class="opt-btn" onclick="selectOption(1, 1)">Mostly</button>
+                <button class="opt-btn" onclick="selectOption(1, 0)">Uncertain</button>
+                <button class="opt-btn" onclick="selectOption(1, -1)">Strained</button>
+                <button class="opt-btn" onclick="selectOption(1, -2)">Failing</button>
+            </div>
+        </div>
+
+        <!-- 3. Conditions -->
+        <div class="q-block" id="q2">
+            <span class="q-title">3. Conditions (External Factors)</span>
+            <div class="q-desc">Are the necessary resources and objective factors in place?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectOption(2, 2, this)">Fully Ready</button>
+                <button class="opt-btn" onclick="selectOption(2, 1)">Mostly</button>
+                <button class="opt-btn" onclick="selectOption(2, 0)">Uncertain</button>
+                <button class="opt-btn" onclick="selectOption(2, -1)">Lacking</button>
+                <button class="opt-btn" onclick="selectOption(2, -2)">Not Ready</button>
+            </div>
+        </div>
+
+        <!-- 4. Means -->
+        <div class="q-block" id="q3">
+            <span class="q-title">4. Means (Capabilities)</span>
+            <div class="q-desc">Do we have the tools and methods required to execute?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectOption(3, 2, this)">Capable</button>
+                <button class="opt-btn" onclick="selectOption(3, 1)">Mostly</button>
+                <button class="opt-btn" onclick="selectOption(3, 0)">Uncertain</button>
+                <button class="opt-btn" onclick="selectOption(3, -1)">Insufficient</button>
+                <button class="opt-btn" onclick="selectOption(3, -2)">Not Feasible</button>
+            </div>
+        </div>
+
+        <!-- 5. Timing -->
+        <div class="q-block" id="q4">
+            <span class="q-title">5. Timing (The Moment)</span>
+            <div class="q-desc">Is this the right moment? Not too early, not too late?</div>
+            <div class="options">
+                <button class="opt-btn" onclick="selectOption(4, 2, this)">Perfect</button>
+                <button class="opt-btn" onclick="selectOption(4, 1)">Generally</button>
+                <button class="opt-btn" onclick="selectOption(4, 0)">Uncertain</button>
+                <button class="opt-btn" onclick="selectOption(4, -1)">Premature</button>
+                <button class="opt-btn" onclick="selectOption(4, -2)">Too Late</button>
+            </div>
+        </div>
+    </div>
+
+    <button id="submit-btn" onclick="calculateResult()">Generate Decision Output</button>
+
+    <div id="result-box">
+        <div class="nav-indicator" id="indicator-box">
+            <span class="status-big" id="status-display"></span>
+        </div>
+        <p id="desc-display" class="desc-tag"></p>
+
+        <div class="diag-card">
+            <h4>💡 Systemic Assessment</h4>
+            <div id="analysis-text" class="diag-text"></div>
+        </div>
+
+        <div class="diag-card">
+            <h4>🛠️ Tactical Guidance</h4>
+            <div id="guide-text" class="diag-text"></div>
+        </div>
+
+        <p class="final-quote">"De is not about making things better;<br>It is the condition that keeps a system from breaking down."</p>
+        <button onclick="location.reload()" style="margin-top:15px; background:none; border:none; color:var(--accent); cursor:pointer; text-decoration: underline; font-size: 0.8rem;">← Restart Calibration</button>
+    </div>
+</div>
+
+<script>
+    let scores = [null, null, null, null, null];
+
+    function selectOption(qIdx, val, el) {
+        scores[qIdx] = val;
+        const row = document.getElementById(`q${qIdx}`);
+        const btns = row.querySelectorAll('.opt-btn');
+        btns.forEach(btn => btn.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function calculateResult() {
+        if (scores.includes(null)) {
+            alert("Please complete all 5 dimensions before generating results.");
+            return;
+        }
+
+        const total = scores.reduce((a, b) => a + b, 0);
+        const [dao, de, wu, qi, shi] = scores;
+        
+        const resBox = document.getElementById('result-box');
+        const icon = document.getElementById('status-display');
+        const box = document.getElementById('indicator-box');
+        const desc = document.getElementById('desc-display');
+        const analysis = document.getElementById('analysis-text');
+        const guide = document.getElementById('guide-text');
+
+        resBox.style.display = 'block';
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('questions-list').style.display = 'none';
+        document.querySelector('.intro-box').style.display = 'none';
+
+        if (dao <= -1) {
+            icon.innerText = "STOP"; box.style.borderColor = "var(--stop)"; icon.style.color = "var(--stop)";
+            desc.innerText = "CEASE IMMEDIATELY";
+            analysis.innerHTML = "<b>Fundamental Flaw:</b> The core direction (Dao) is misaligned. Execution will only accelerate failure.";
+            guide.innerHTML = "Stop and re-evaluate. Do not waste resources on a path that contradicts the underlying pattern of reality.";
+        } else if (shi <= -1) {
+            icon.innerText = "SHIFT"; box.style.borderColor = "var(--shift)"; icon.style.color = "var(--shift)";
+            desc.innerText = "CHANGE DIRECTION";
+            analysis.innerHTML = "<b>Timing Friction:</b> The strategy may be right, but the timing or momentum is working against you.";
+            guide.innerHTML = "Do not force through. Pivot or wait for a more supportive shift in momentum.";
+        } else if (total >= 7) {
+            icon.innerText = "MOVE"; box.style.borderColor = "var(--move)"; icon.style.color = "var(--move)";
+            desc.innerText = "DECISIVE ACTION";
+            analysis.innerHTML = "<b>Optimal Alignment:</b> Direction, capacity, and timing are perfectly synchronized.";
+            guide.innerHTML = "Proceed with focus. You have the carrying capacity to achieve your goal with minimal friction.";
+        } else if (de < 1 || (wu + qi) < 1) {
+            icon.innerText = "STORE"; box.style.borderColor = "var(--store)"; icon.style.color = "var(--store)";
+            desc.innerText = "ACCUMULATE POWER";
+            analysis.innerHTML = "<b>Capacity Gap:</b> The direction is correct, but your internal sustainability (De) or resources are insufficient.";
+            guide.innerHTML = "Stop the noise. Focus on internal growth and resource building. Wait until your capacity matches the path.";
+        } else {
+            icon.innerText = "WAIT"; box.style.borderColor = "var(--wait)"; icon.style.color = "var(--wait)";
+            desc.innerText = "OBSERVE & WAIT";
+            analysis.innerHTML = "<b>Unclear Signals:</b> The pattern is not yet fully formed. Action now would be premature.";
+            guide.innerHTML = "Maintain stillness. Let the situation ripen before making a move.";
+        }
+        window.scrollTo(0,0);
+    }
+</script>
+
+</body>
+</html>
